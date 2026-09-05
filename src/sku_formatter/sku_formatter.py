@@ -5,7 +5,8 @@ def driver(file_name):
         raw = extract_skus(file_name)
         formatted = format_skus(raw)
         write_skus(formatted, file_name)
-    except: #driver detects something bad from the functions and exits
+    except (FileNotFoundError, PermissionError, IsADirectoryError, UnicodeDecodeError):
+        print("Double check your file and try again")
         exit()
 
     return formatted
@@ -13,16 +14,11 @@ def driver(file_name):
 def extract_skus(file_name):
     raw_sku_list = []
 
-    try:
-        with open(file_name, "r") as file:
-            for line in file:
-                raw_skus = re.findall(r"\d+", line) # "\d" means decimal digits and "+" means 1 or more times
-                for sku in raw_skus:
-                    raw_sku_list.append(sku)
-    except (FileNotFoundError, PermissionError, IsADirectoryError, UnicodeDecodeError):
-        print("Double check your file and try again")
-        
-        return # tell driver that something bad happened
+    with open(file_name, "r") as file:
+        for line in file:
+            raw_skus = re.findall(r"\d+", line) # "\d" means decimal digits and "+" means 1 or more times
+            for sku in raw_skus:
+                raw_sku_list.append(sku)
 
     return raw_sku_list
 

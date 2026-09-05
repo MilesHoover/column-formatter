@@ -44,8 +44,6 @@ def test_write_skus_empty_list(tmp_path):
     assert write_skus_input.read_text() == ""
 
 def test_driver(tmp_path):
-    # directory = tmp_path / "directory"
-    # directory.mkdir()
     driver_input = tmp_path / "driver_input.txt"
     driver_input.write_text("""
         94812370, 0041234736 --comment #123#
@@ -59,3 +57,8 @@ def test_driver(tmp_path):
     )
     sku_formatter.driver(driver_input)
     assert driver_input.read_text() == "'94812370',\n'41234736',\n'123',\n'91912',\n'923444',\n'3123412341234',\n'312341234'"
+
+def test_driver_exception(tmp_path):
+    driver_exception_input = tmp_path / "driver_exception_input.txt"
+    with pytest.raises(SystemExit):
+        sku_formatter.driver(driver_exception_input)
