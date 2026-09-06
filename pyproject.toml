@@ -1,10 +1,11 @@
 [project]
 name="sku_formatter"
 version="1.0.0"
+requires-python=">=3.10"
 
 [build-system]
-requires=["setuptools"]
-build-backend="setuptools.build_meta"
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
 
 [project.scripts]
 skuf="sku_formatter.__main__:main"
@@ -16,3 +17,6 @@ where=["src"]
 addopts=[
     "--import-mode=importlib",
 ]
+
+[project.optional-dependencies]
+test = ["pytest"]
