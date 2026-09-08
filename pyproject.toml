@@ -20,3 +20,4 @@ addopts=[
 
 [project.optional-dependencies]
 test = ["pytest"]
+lint = ["ruff"]
