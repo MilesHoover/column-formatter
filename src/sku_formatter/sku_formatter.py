@@ -1,7 +1,10 @@
-import re
-import os
 import logging
+import os
+import re
+import sys
 from time import perf_counter
+
+log = logging.getLogger(__name__)
 
 
 def driver(file_name: str | os.PathLike) -> list:
@@ -14,10 +17,9 @@ def driver(file_name: str | os.PathLike) -> list:
 
         end = perf_counter()
     except (FileNotFoundError, PermissionError, IsADirectoryError, UnicodeDecodeError):
-        logging.error("Double check your input file and try again")
-        exit()
-
-    logging.info("Format Completed in %.4f", end - start)
+        log.error("Double check your input file and try again")
+        sys.exit()
+    log.info("Format Completed in %.4f", end - start)
 
     return formatted
 
@@ -29,8 +31,7 @@ def extract_skus(file_name: str | os.PathLike) -> list[str]:
         for line in file:
             # "\d" means decimal digits and "+" means 1 or more times
             raw_skus = re.findall(r"\d+", line)
-            for sku in raw_skus:
-                raw_sku_list.append(sku)
+            raw_sku_list.extend(raw_skus)
 
     return raw_sku_list
 
@@ -40,8 +41,8 @@ def format_skus(raw_sku_list: list) -> list[str]:
 
     for raw_sku in raw_sku_list:
         # ^ means starts with 0 and replaces it with nothing (stripping the zeros)
-        stripped_sku = re.sub('^0+', '', raw_sku)
-        if stripped_sku == '':
+        stripped_sku = re.sub("^0+", "", raw_sku)
+        if stripped_sku == "":
             continue
         else:
             formatted_sku_list.append(stripped_sku)
@@ -57,7 +58,7 @@ def format_skus(raw_sku_list: list) -> list[str]:
 def write_skus(deduped_sku_list: list, file_name: str | os.PathLike) -> None:
     with open(file_name, "w") as file:
         for index, sku in enumerate(deduped_sku_list):
-            formatted_sku = (f"'{sku}'")
+            formatted_sku = f"'{sku}'"
             if index < len(deduped_sku_list) - 1:
                 file.write(f"{formatted_sku},\n")
             else:

@@ -27,4 +27,4 @@ jobs:
         run: pytest
 
       - name: lint with ruff
-        run: ruff
+        run: ruff format --check .
